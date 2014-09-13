@@ -15,7 +15,15 @@ public class MainSolution {
     mSolver = new Solver();
   }
   
+  public static void printUsage() {
+    System.out.println("Usage: <MainSolution> input.txt dictionary.txt");
+  }
+  
   public static void main(String... args) {  // Usage: <main> input.txt dictionary.txt
+    if (args.length < 2) {
+      printUsage();
+      return;
+    }
     MainSolution instance = new MainSolution();
     instance.readDictionary(args[1]);
     instance.readNumbers(args[0]);  // read numbers and solve
