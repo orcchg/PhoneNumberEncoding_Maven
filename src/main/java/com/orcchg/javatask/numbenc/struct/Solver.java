@@ -28,6 +28,9 @@ public class Solver {
     return mDictionary.get(label);
   }
   
+  /**
+   * @brief Retrieves formatted solution as required
+   */
   public List<String> solve(final String number) {
     String digital_number = Util.remainDigitsOnly(number);
     List<String> answer = processNumber(digital_number);
@@ -39,6 +42,9 @@ public class Solver {
     return formatted_answer;
   }
   
+  /**
+   * @brief Retrieves solution for digital number
+   */
   public List<String> processNumber(final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
     if (digital_number.length() == 0) {
@@ -76,6 +82,9 @@ public class Solver {
   
   /* Private methods */
   // --------------------------------------------------------------------------
+  /**
+   * @brief Get all word representations for such digital number within automaton
+   */
   private List<String> getAllWords(final Automaton automaton, final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
 
@@ -95,13 +104,15 @@ public class Solver {
     char next_digit = digital_number.charAt(prefix_last_index);
     int next_value = Character.getNumericValue(next_digit);
     
+    // trying to get the longest prefix which could be represented via words from dictionary
+    //     using breadth-first search of reachable nodes in trie (automaton)
     while (!track.isEmpty()) {
       for (char label : LookupTable.map[next_value]) {
         int index = buffer.peek();
         AutomatonNode node = automaton.makeTransition(index, label);
-        if (node != null) {
+        if (node != null) {  // discovered new reachable nodes
           track.add(node.getIndex());
-          if (node.isTerminal()) {
+          if (node.isTerminal()) {  // terminal node represents a particular word from dictionary
             if (prefix_representation.get(prefix_last_index) == null) {
               prefix_representation.put(prefix_last_index, new ArrayList<AutomatonNode>());
             }
@@ -110,10 +121,10 @@ public class Solver {
         }
       }
       
-      buffer.poll();
+      buffer.poll();  // the node has been visited
       track.poll();
       
-      if (buffer.isEmpty() && !track.isEmpty()) {
+      if (buffer.isEmpty() && !track.isEmpty()) {  // continue search with next digit-letter
         buffer.addAll(track);
         ++prefix_last_index;
         if (prefix_last_index >= digital_number.length()) {
@@ -134,23 +145,25 @@ public class Solver {
       if (prefix_representation.get(prefix_last_index) == null) {
         prefix_representation.put(prefix_last_index, new ArrayList<AutomatonNode>());
       }
-      AutomatonNode node = new AutomatonNode.Builder()
+      AutomatonNode node = new AutomatonNode.Builder()  // fictitious node for single digit
                               .setParentNodeIndex(0)
                               .setLabelFromParent(next_digit)
                               .build();
       prefix_representation.get(prefix_last_index).add(node);
     }
     
+    // building final answer as concatenation of all possible variations of prefix
+    //     and answers for its corresponding suffixes
     for (Map.Entry<Integer, List<AutomatonNode>> entry : prefix_representation.entrySet()) {
       List<StringBuilder> answer_ctor = new ArrayList<>(3000);
       List<AutomatonNode> terminal_nodes = entry.getValue();
       List<String> prefix_words = gatherWords(automaton, terminal_nodes);
-      for (String word : prefix_words) {
+      for (String word : prefix_words) {  // all word representations for such prefix
         answer_ctor.add(new StringBuilder().append(word));
       }
       
       String digital_suffix = digital_number.substring(entry.getKey() + 1);
-      if (!digital_suffix.isEmpty()) {
+      if (!digital_suffix.isEmpty()) {  // getting answer for suffix recursively
         char first_digit = digital_suffix.charAt(0);
         List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
         for (Automaton subautomaton : accept_automata) {
@@ -161,7 +174,7 @@ public class Solver {
             }
           }
         }
-      } else {
+      } else {  // no suffix - record the answer
         for (StringBuilder preword : answer_ctor) {
           String word = preword.toString();
           String alpha_word = Util.remainLettersOnly(word);
@@ -175,6 +188,17 @@ public class Solver {
     return answer;
   }
   
+  /**
+   * @brief Given set of terminal nodes, get all words corresponding to each node in automaton
+   * 
+   * @param automaton - the automaton under consideration
+   * @param terminal_nodes - list of terminal nodes in automaton
+   * @return list of words corresponding to terminal nodes in automaton
+   * 
+   * @details starting at certain terminal node, the algorithm descends through the automaton
+   *          back to it's root node, retrieving the word in reversed order letter-by-letter,
+   *          and then reversing it in order to get correct result
+   */
   private List<String> gatherWords(final Automaton automaton, final List<AutomatonNode> terminal_nodes) {
     List<String> answer = new ArrayList<>(terminal_nodes.size());
     for (AutomatonNode node : terminal_nodes) {
@@ -197,6 +221,11 @@ public class Solver {
     return answer;
   }
   
+  /**
+   * @brief Given a digit, retrieves all automata starting from corresponding letter
+   * @param digit - input digit
+   * @return list of all acceptable automata, where further digital number could be found
+   */
   private List<Automaton> getAllSuitableAutomata(char digit) {
     int value = Character.getNumericValue(digit);
     List<Automaton> accept_automata = new ArrayList<Automaton>();
@@ -209,6 +238,9 @@ public class Solver {
     return accept_automata;
   }
   
+  /**
+   * @brief Helper method culling possible answers, which length is not equal to digital number's one
+   */
   private List<String> cullInconsistentByLength(final String digital_number, final List<String> answer_with_mistakes) {
     List<String> answer = new ArrayList<>(3000);
     for (String word : answer_with_mistakes) {
@@ -220,6 +252,10 @@ public class Solver {
     return answer;
   }
   
+  /**
+   * @brief Remove possible duplicates from answer and those words, which
+   *        have two or more adjacent digits
+   */
   private List<String> culling(final List<String> answer_with_mistakes) {
     List<String> no_duplicates = Util.removeDuplicates(answer_with_mistakes);
     List<String> answer = new ArrayList<>(3000);
