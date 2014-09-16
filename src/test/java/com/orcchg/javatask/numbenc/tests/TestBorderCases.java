@@ -18,9 +18,8 @@ import org.junit.Test;
 
 import com.orcchg.javatask.numbenc.struct.Automaton;
 import com.orcchg.javatask.numbenc.struct.Solver;
-import com.orcchg.javatask.numbenc.utils.Util;
 
-public class BorderCasesTest {
+public class TestBorderCases {
   private static Solver mSolver, mSmallSolver;
   private static List<String> mNumbers, mSmallDictionary;
   private static Random mRng;
