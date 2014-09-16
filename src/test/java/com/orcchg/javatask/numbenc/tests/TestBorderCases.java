@@ -142,4 +142,64 @@ public class TestBorderCases {
                  "of the dictionary file or the phone number file", true);
     }
   }
+  
+  @Test
+  public void testHardcodedCases() {
+    List<String> answer = mSolver.solve("107-");
+    assertTrue("Size of answer is incorrect!", answer.size() == 2);
+    for (String string : answer) {
+      assertTrue("Hardcoded answer was not matched!",
+          string.equals("107-: neu") || string.equals("107-: je 7"));
+    }
+    
+    answer = mSolver.solve("112");
+    assertTrue("Answer must be empty!", answer.isEmpty());
+    
+    answer = mSolver.solve("5624-82");
+    assertTrue("Size of answer is incorrect!", answer.size() == 2);
+    for (String string : answer) {
+      assertTrue("Hardcoded answer was not matched!",
+          string.equals("5624-82: mir Tor") || string.equals("5624-82: Mix Tor"));
+    }
+    
+    answer = mSolver.solve("4824");
+    assertTrue("Size of answer is incorrect!", answer.size() == 3);
+    for (String string : answer) {
+      assertTrue("Hardcoded answer was not matched!",
+          string.equals("4824: Torf") ||
+          string.equals("4824: fort") ||
+          string.equals("4824: Tor 4"));
+    }
+    
+    answer = mSolver.solve("0721/608-4067");
+    assertTrue("Answer must be empty!", answer.isEmpty());
+    
+    answer = mSolver.solve("10/783--5");
+    assertTrue("Size of answer is incorrect!", answer.size() == 3);
+    for (String string : answer) {
+      assertTrue("Hardcoded answer was not matched!",
+          string.equals("10/783--5: neu o\"d 5") ||
+          string.equals("10/783--5: je bo\"s 5") ||
+          string.equals("10/783--5: je Bo\" da"));
+    }
+    
+    answer = mSolver.solve("1078-913-5");
+    assertTrue("Answer must be empty!", answer.isEmpty());
+    
+    answer = mSolver.solve("381482");
+    assertTrue("Size of answer is incorrect!", answer.size() == 1);
+    for (String string : answer) {
+      assertTrue("Hardcoded answer was not matched!",
+          string.equals("381482: so 1 Tor"));
+    }
+    
+    answer = mSolver.solve("04824");
+    assertTrue("Size of answer is incorrect!", answer.size() == 3);
+    for (String string : answer) {
+      assertTrue("Hardcoded answer was not matched!",
+          string.equals("04824: 0 Torf") ||
+          string.equals("04824: 0 fort") ||
+          string.equals("04824: 0 Tor 4"));
+    }
+  }
 }
