@@ -41,7 +41,11 @@ public class Solver {
   
   public List<String> processNumber(final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
-    
+    if (digital_number.length() == 0) {
+      // there were no acceptable automata for prefixes - answer is empty, nothing to be printed
+      return answer;
+    }
+
     char first_digit = digital_number.charAt(0);
     List<Automaton> accept_automata = getAllSuitableAutomata(first_digit);
     if (accept_automata.isEmpty()) {
