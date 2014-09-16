@@ -46,7 +46,6 @@ public class Automaton {
       }
       
       boolean upper_case = Character.isUpperCase(label);
-      //label = Character.toLowerCase(label);
       int char_index = Util.getCharShift(label);
       
       if (isEdgeAbsent(char_index, node_index)) {
@@ -69,7 +68,6 @@ public class Automaton {
   }
   
   public AutomatonNode makeTransition(int from_node, char label) {
-    //label = Character.toLowerCase(label);
     int char_index = Util.getCharShift(label);
     int to_node = mNodes.get(from_node).getTransitions().get(char_index);
     if (to_node != AutomatonNode.EDGE_IS_ABSENT) {
