@@ -127,4 +127,20 @@ public class BorderCasesTest {
     List<String> answer = mSmallSolver.solve("--0//-");
     assertTrue("No acceptable automata - nothing should be printed!", answer.isEmpty());
   }
+  
+  @Test
+  public void testEmptyString() {
+    List<String> answer = mSmallSolver.solve("");
+    assertTrue("Nothing to be done!", answer.isEmpty());
+  }
+  
+  @Test
+  public void testInvalidNumberFormat() {
+    try {
+      mSmallSolver.solve(" ");
+    } catch (RuntimeException expected) {
+      assertTrue("The program must not be robust against incorrect formats " +
+                 "of the dictionary file or the phone number file", true);
+    }
+  }
 }
