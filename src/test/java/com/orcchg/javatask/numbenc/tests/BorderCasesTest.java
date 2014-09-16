@@ -21,8 +21,8 @@ import com.orcchg.javatask.numbenc.struct.Solver;
 import com.orcchg.javatask.numbenc.utils.Util;
 
 public class BorderCasesTest {
-  private static Solver mSolver;
-  private static List<String> mNumbers;
+  private static Solver mSolver, mSmallSolver;
+  private static List<String> mNumbers, mSmallDictionary;
   private static Random mRng;
 
   @BeforeClass
@@ -57,6 +57,29 @@ public class BorderCasesTest {
       }
     } catch (IOException e) {
       e.printStackTrace();
+    }
+    
+    mSmallSolver = new Solver();
+    mSmallDictionary = new ArrayList<String>();
+    mSmallDictionary.add("an");
+    mSmallDictionary.add("Bo\"");
+    mSmallDictionary.add("da");
+    mSmallDictionary.add("Fee");
+    mSmallDictionary.add("Tor");
+    mSmallDictionary.add("O\"mlaut");
+    mSmallDictionary.add("Zeit");
+    mSmallDictionary.add("Geist");
+    mSmallDictionary.add("Feueur");
+    mSmallDictionary.add("u\"nd");
+    mSmallDictionary.add("Wasser");
+    
+    for (String line : mSmallDictionary) {
+      char label = line.charAt(0);
+      Automaton automaton = mSmallSolver.getAutomaton(label);
+      if (automaton == null) {
+        automaton = mSmallSolver.addEmptyAutomaton(label);
+      }
+      automaton.addWord(line);
     }
   }
 
@@ -95,9 +118,13 @@ public class BorderCasesTest {
       }
       
       List<String> answer = mSolver.solve(number.toString());
-      System.out.println(number.toString());
       assertTrue("One-digit number must have unique representation!", answer.size() <= 1);
     }
   }
 
+  @Test
+  public void testNoSuchAutomata() {
+    List<String> answer = mSmallSolver.solve("--0//-");
+    assertTrue("No acceptable automata - nothing should be printed!", answer.isEmpty());
+  }
 }
