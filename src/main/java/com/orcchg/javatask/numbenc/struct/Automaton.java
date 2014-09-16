@@ -6,7 +6,7 @@ import java.util.List;
 import com.orcchg.javatask.numbenc.utils.Util;
 
 public class Automaton {
-  protected static final String authorTag = "Written by Maxim Alov <m.alov@samsung.com>, <orcchg@yandex.ru> aka Orcchg (Moscow, Russia);  github.com/orcchg".intern();
+  protected static final String tag = "Just to demonstrate I know this feature!".intern();
   private static final int APPROXIMATE_TOTAL_WORDS = 3_150;
   
   private Character mID;
@@ -92,11 +92,7 @@ public class Automaton {
   }
   
   /* Private methods */
-  // --------------------------------------------------------------------------
-  protected void printAuthorTag() {
-    System.out.println(authorTag);
-  }
-  
+  // --------------------------------------------------------------------------  
   private boolean isEdgeAbsent(int char_index, int node_index) {
     return mNodes.get(node_index).getTransitions().get(char_index) == AutomatonNode.EDGE_IS_ABSENT;
   }
