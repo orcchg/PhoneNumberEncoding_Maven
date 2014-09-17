@@ -27,8 +27,19 @@ public class Util {
     return alpha_word;
   }
   
+  public static String removeWhitespaces(final String word) {
+    String trim_word = word.replaceAll(" ", "");
+    return trim_word;
+  }
+  
   public static String removeFirstChar(final String string) {
     return string.substring(1);
+  }
+  
+  public static String removeFormatPrefix(final String prefixed_string) {
+    int colon_index = prefixed_string.indexOf(':');
+    String plain_string = prefixed_string.substring(colon_index + 2);
+    return plain_string;
   }
   
   @SuppressWarnings("unchecked")
