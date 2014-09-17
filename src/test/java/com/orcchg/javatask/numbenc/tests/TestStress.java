@@ -55,7 +55,7 @@ public class TestStress {
       e.printStackTrace();
     }
     
-    try (InputStream fin = classloader.getResourceAsStream("in.txt");
+    try (InputStream fin = classloader.getResourceAsStream("instress.txt");
          BufferedReader reader = new BufferedReader(new InputStreamReader(fin))) {
       String line = null;
       while ((line = reader.readLine()) != null) {
