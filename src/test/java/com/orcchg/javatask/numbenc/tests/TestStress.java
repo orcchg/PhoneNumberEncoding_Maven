@@ -80,12 +80,19 @@ public class TestStress {
     assertTrue("Not all combinations were generated!", combinations.size() == 1575);
     for (String combination : combinations) {
       if (!Util.hasAdjacentDigits(combination)) {
-        //System.out.println(combination);
+        List<String> matching_combination = matchWords(combination, mDictionaryModified);
+        if (!matching_combination.isEmpty()) {
+          System.err.println("COMB: " + combination + "; " + matching_combination);
+        }
       }
     }
     
-    List<String> matches = matchWords("|d", mDictionaryModified);
-    System.out.println(matches);
+    List<String> matches = matchWords("|dOrtMixer", mDictionaryModified);
+    for (String match : matches) {
+      System.out.println(match);
+      assertTrue("Matching malfunctions!",
+          match.contains("|d") && match.contains("Ort") && match.contains("Mixer"));
+    }
   }
   
   /* Private methods */
@@ -103,7 +110,7 @@ public class TestStress {
         if (!suffix.isEmpty()) {
           List<String> subanswer = matchWords(suffix, dictionary);
           for (String subword : subanswer) {
-            answer.add(word + " " + subword);
+            answer.add(word + subword);
           }
         } else {
           answer.add(word);
