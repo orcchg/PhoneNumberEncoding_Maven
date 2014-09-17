@@ -21,7 +21,7 @@ import com.orcchg.javatask.numbenc.utils.Util;
 
 public class TestStress {
   private static Solver mSolver;
-  private static List<String> mNumbers, mDictionary;
+  private static List<String> mNumbers, mDictionary, mDictionaryModified;
   private static Random mRng;
   
   @BeforeClass
@@ -29,6 +29,7 @@ public class TestStress {
     mSolver = new Solver();
     mNumbers = new ArrayList<String>(100);
     mDictionary = new ArrayList<String>(100);
+    mDictionaryModified = new ArrayList<String>(100);
     mRng = new Random();
     mRng.setSeed(239);
     
@@ -39,8 +40,7 @@ public class TestStress {
       String line = null;
       while ((line = reader.readLine()) != null) {
         mDictionary.add(line);
-        System.out.print(line + " ");
-        System.out.println(Util.convertUmlautCharsToPlaceholders(line));
+        mDictionaryModified.add(Util.convertUmlautCharsToPlaceholders(line));
         char label = line.charAt(0);
         Automaton automaton = mSolver.getAutomaton(label);
         if (automaton == null) {
@@ -74,46 +74,15 @@ public class TestStress {
   
   @Test
   public void testStress() {
-    List<String> combinations = generateAllCombinations("4824");
+    List<String> combinations = Util.generateAllCombinations("4824", LookupTable.map);
     for (String combination : combinations) {
-      //System.out.println(combination);
+      if (!Util.hasAdjacentDigits(combination)) {
+        System.out.println(combination);
+      }
     }
   }
   
   /* Private methods */
   // --------------------------------------------------------------------------
-  // TODO: consider umlauts
-  private List<String> generateAllCombinations(final String digital_number) {
-    List<String> answer = new ArrayList<>(1000);  // Omega(3^n)
-    if (digital_number.isEmpty()) {
-      return answer;
-    }
-    
-    char digit = digital_number.charAt(0);
-    int value = Character.getNumericValue(digit);
-    List<StringBuilder> combinations = new ArrayList<>();
-    combinations.add(new StringBuilder().append(digit));
-    
-    char[] letters = LookupTable.map[value];
-    for (char letter : letters) {
-      combinations.add(new StringBuilder().append(letter));
-    }
-    
-    String digital_suffix = digital_number.substring(1);
-    List<String> subanswer = null;
-    if (!digital_suffix.isEmpty()) {
-      subanswer = generateAllCombinations(digital_suffix);
-      for (StringBuilder preword : combinations) {
-        for (String subword : subanswer) {
-          answer.add(preword.toString() + subword);
-        }
-      }
-    } else {
-      for (StringBuilder preword : combinations) {
-        answer.add(preword.toString());
-      }
-    }
-    
-    return answer;
-  }
+
 }

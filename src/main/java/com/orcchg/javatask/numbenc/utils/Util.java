@@ -1,9 +1,12 @@
 package com.orcchg.javatask.numbenc.utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import com.orcchg.javatask.numbenc.struct.LookupTable;
 
 public class Util {
   public static boolean isQuote(char character) {
@@ -66,16 +69,22 @@ public class Util {
     char converted = 0;
     switch (character) {
       case 'a':
-      case 'A':
         converted = '{';
         break;
+      case 'A':
+        converted = '[';
+        break;
       case 'o':
-      case 'O':
         converted = '|';
         break;
+      case 'O':
+        converted = '\\';
+        break;
       case 'u':
-      case 'U':
         converted = '}';
+        break;
+      case 'U':
+        converted = ']';
         break;
       default:
         throw new IllegalArgumentException("Unable to convert [" + character + "] to umlaut.");
@@ -84,7 +93,8 @@ public class Util {
   }
   
   public static boolean isUmlaut(char character) {
-    if (character == '{' || character == '|' || character == '}') {
+    if (character == '{' || character == '|' || character == '}' ||
+        character == '[' || character == '\\' || character == ']') {
       return true;
     }
     return false;
@@ -96,11 +106,20 @@ public class Util {
       case '{':
         converted = 'a';
         break;
+      case '[':
+        converted = 'A';
+        break;
       case '|':
         converted = 'o';
         break;
+      case '\\':
+        converted = 'O';
+        break;
       case '}':
         converted = 'u';
+        break;
+      case ']':
+        converted = 'U';
         break;
       default:
         throw new IllegalArgumentException("Character [" + character + "] has no mapping on set of umlauts.");
@@ -149,4 +168,41 @@ public class Util {
     }
     System.out.println("");
   }
+  
+  public static List<String> generateAllCombinations(final String digital_number, char[][] table) {
+    List<String> answer = new ArrayList<>(1000);  // Omega(3^n)
+    if (digital_number.isEmpty()) {
+      return answer;
+    }
+    
+    char digit = digital_number.charAt(0);
+    int value = Character.getNumericValue(digit);
+    List<StringBuilder> combinations = new ArrayList<>();
+    combinations.add(new StringBuilder().append(digit));
+    
+    char[] letters = table[value];
+    for (char letter : letters) {
+      combinations.add(new StringBuilder().append(letter));
+    }
+    
+    String digital_suffix = digital_number.substring(1);
+    List<String> subanswer = null;
+    if (!digital_suffix.isEmpty()) {
+      subanswer = generateAllCombinations(digital_suffix, table);
+      for (StringBuilder preword : combinations) {
+        for (String subword : subanswer) {
+          answer.add(preword.toString() + subword);
+        }
+      }
+    } else {
+      for (StringBuilder preword : combinations) {
+        answer.add(preword.toString());
+      }
+    }
+    
+    return answer;
+  }
+  
+  /* Private methods */
+  // --------------------------------------------------------------------------
 }
