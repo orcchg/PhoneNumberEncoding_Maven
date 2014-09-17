@@ -60,17 +60,27 @@ public class TestBorderCases {
     
     mSmallSolver = new Solver();
     mSmallDictionary = new ArrayList<String>();
-    mSmallDictionary.add("an");
+    mSmallDictionary.add("An");
+    mSmallDictionary.add("A\"n");
     mSmallDictionary.add("Bo\"");
+    mSmallDictionary.add("BO\"");
     mSmallDictionary.add("da");
+    mSmallDictionary.add("dA\"");
     mSmallDictionary.add("Fee");
     mSmallDictionary.add("Tor");
     mSmallDictionary.add("O\"mlaut");
     mSmallDictionary.add("Zeit");
     mSmallDictionary.add("Geist");
     mSmallDictionary.add("Feueur");
+    mSmallDictionary.add("FeUeur");
+    mSmallDictionary.add("Feu\"eur");
+    mSmallDictionary.add("FeU\"eur");
     mSmallDictionary.add("u\"nd");
+    mSmallDictionary.add("U\"nd");
     mSmallDictionary.add("Wasser");
+    mSmallDictionary.add("WAsser");
+    mSmallDictionary.add("Wa\"sser");
+    mSmallDictionary.add("WA\"sser");
     
     for (String line : mSmallDictionary) {
       char label = line.charAt(0);
@@ -139,8 +149,14 @@ public class TestBorderCases {
       mSmallSolver.solve(" ");
     } catch (RuntimeException expected) {
       assertTrue("The program must not be robust against incorrect formats " +
-                 "of the dictionary file or the phone number file", true);
+                 "of the dictionary file or the phone number file.", true);
     }
+  }
+  
+  @Test
+  public void testCaseSensitive() {
+    List<String> answer = mSmallSolver.solve("40-7/07-2/--713//-25-33--02");
+    assertTrue("Take all cases into consideration.", answer.size() == 32);
   }
   
   @Test
