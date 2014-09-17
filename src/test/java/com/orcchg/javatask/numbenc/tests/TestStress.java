@@ -102,6 +102,10 @@ public class TestStress {
     if (combination.isEmpty()) {
       return answer;
     }
+    if (combination.length() == 1 && Character.isDigit(combination.charAt(0))) {
+      answer.add(combination);
+      return answer;
+    }
     
     for (String word : dictionary) {
       boolean starts = combination.startsWith(word);
