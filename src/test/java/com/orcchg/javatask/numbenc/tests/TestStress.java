@@ -17,6 +17,7 @@ import org.junit.Test;
 import com.orcchg.javatask.numbenc.struct.Automaton;
 import com.orcchg.javatask.numbenc.struct.LookupTable;
 import com.orcchg.javatask.numbenc.struct.Solver;
+import com.orcchg.javatask.numbenc.utils.Util;
 
 public class TestStress {
   private static Solver mSolver;
@@ -38,6 +39,8 @@ public class TestStress {
       String line = null;
       while ((line = reader.readLine()) != null) {
         mDictionary.add(line);
+        System.out.print(line + " ");
+        System.out.println(Util.convertUmlautCharsToPlaceholders(line));
         char label = line.charAt(0);
         Automaton automaton = mSolver.getAutomaton(label);
         if (automaton == null) {
@@ -73,7 +76,7 @@ public class TestStress {
   public void testStress() {
     List<String> combinations = generateAllCombinations("4824");
     for (String combination : combinations) {
-      System.out.println(combination);
+      //System.out.println(combination);
     }
   }
   

@@ -108,6 +108,40 @@ public class Util {
     return converted;
   }
   
+  public static String convertUmlautCharsToPlaceholders(final String word) {
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i + 1 < word.length(); /* no-op */) {
+      char label = word.charAt(i);
+      if (word.charAt(i + 1) == '"') {
+        char placeholder = convertToUmlaut(label);
+        result.append(placeholder);
+        i += 2;
+      } else {
+        result.append(label);
+        ++i;
+      }
+    }
+    char last = word.charAt(word.length() - 1);
+    if (last != '"') {
+      result.append(last);
+    }
+    return result.toString();
+  }
+  
+  public static String convertPlaceholdersToUmlautChars(final String word) {
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i < word.length(); ++i) {
+      char label = word.charAt(i);
+      if (isUmlaut(label)) {
+        char umlaut = convertFromUmlaut(label);
+        result.append(umlaut).append('"');
+      } else {
+        result.append(label);
+      }
+    }
+    return result.toString();
+  }
+  
   public static void printList(final String prefix, final List<String> list) {
     System.out.print(prefix + " ");
     for (String word : list) {
