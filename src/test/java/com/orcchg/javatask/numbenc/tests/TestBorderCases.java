@@ -133,8 +133,11 @@ public class TestBorderCases {
 
   @Test
   public void testNoSuchAutomata() {
-    List<String> answer = mSmallSolver.solve("--0//-");
+    List<String> answer = mSmallSolver.solve("--0/0/0-");
     assertTrue("No acceptable automata - nothing should be printed!", answer.isEmpty());
+    
+    answer = mSmallSolver.solve("--0//-");
+    assertTrue("Permit one-digit numbers in any case", answer.size() == 1);
   }
   
   @Test

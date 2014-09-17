@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -131,7 +132,7 @@ public class TestStress {
         }
       }
     }
-    return cullingWrong(answer);
+    return cullIfStartsFromDigit(answer);
   }
   
   private List<String> matchWords(String combination, final List<String> dictionary) {
@@ -175,7 +176,7 @@ public class TestStress {
     }
   }
   
-  private List<String> cullingWrong(final List<String> answer_with_mistakes) {
+  private List<String> cullIfStartsFromDigit(final List<String> answer_with_mistakes) {
     if (answer_with_mistakes.isEmpty()) {
       return answer_with_mistakes;
     }
