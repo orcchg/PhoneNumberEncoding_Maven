@@ -1,5 +1,7 @@
 package com.orcchg.javatask.numbenc.tests;
 
+import static org.junit.Assert.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,14 +77,39 @@ public class TestStress {
   @Test
   public void testStress() {
     List<String> combinations = Util.generateAllCombinations("4824", LookupTable.map);
+    assertTrue("Not all combinations were generated!", combinations.size() == 1575);
     for (String combination : combinations) {
       if (!Util.hasAdjacentDigits(combination)) {
-        System.out.println(combination);
+        //System.out.println(combination);
       }
     }
+    
+    List<String> matches = matchWords("|d", mDictionaryModified);
+    System.out.println(matches);
   }
   
   /* Private methods */
   // --------------------------------------------------------------------------
-
+  private List<String> matchWords(final String combination, final List<String> dictionary) {
+    List<String> answer = new ArrayList<>(1000);
+    if (combination.isEmpty()) {
+      return answer;
+    }
+    
+    for (String word : dictionary) {
+      boolean starts = combination.startsWith(word);
+      if (starts) {
+        String suffix = combination.substring(word.length());
+        if (!suffix.isEmpty()) {
+          List<String> subanswer = matchWords(suffix, dictionary);
+          for (String subword : subanswer) {
+            answer.add(word + " " + subword);
+          }
+        } else {
+          answer.add(word);
+        }
+      }
+    }
+    return answer;
+  }
 }
