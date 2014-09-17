@@ -33,6 +33,18 @@ public class Solver {
    */
   public List<String> solve(final String number) {
     String digital_number = Util.remainDigitsOnly(number);
+    
+    if (digital_number.length() == 1) {
+      List<Automaton> accept_automata = getAllSuitableAutomata(digital_number.charAt(0));
+      if (accept_automata.isEmpty()) {  // no automata have been found for one-digit number
+        List<String> single_answer = new ArrayList<>();
+        StringBuilder single_answer_ctor = new StringBuilder();
+        single_answer_ctor.append(number).append(": ").append(digital_number);
+        single_answer.add(single_answer_ctor.toString());
+        return single_answer;  // we use such number as itself
+      }
+    }
+    
     List<String> answer = processNumber(digital_number);
     List<String> formatted_answer = new ArrayList<>(3000);
     String prefix = new StringBuilder().append(number).append(": ").toString();
@@ -42,10 +54,21 @@ public class Solver {
     return formatted_answer;
   }
   
+  @Override
+  public String toString() {
+    StringBuilder representation = new StringBuilder();
+    for (Map.Entry<Character, Automaton> entry : mDictionary.entrySet()) {
+      representation.append(entry.getValue()).append("\n\n");
+    }
+    return representation.toString();
+  }
+  
+  /* Private methods */
+  // --------------------------------------------------------------------------
   /**
    * @brief Retrieves solution for digital number
    */
-  public List<String> processNumber(final String digital_number) {
+  private List<String> processNumber(final String digital_number) {
     List<String> answer = new ArrayList<>(3000);
     if (digital_number.length() == 0) {
       // there were no acceptable automata for prefixes - answer is empty, nothing to be printed
@@ -71,17 +94,6 @@ public class Solver {
     return culling(answer);
   }
   
-  @Override
-  public String toString() {
-    StringBuilder representation = new StringBuilder();
-    for (Map.Entry<Character, Automaton> entry : mDictionary.entrySet()) {
-      representation.append(entry.getValue()).append("\n\n");
-    }
-    return representation.toString();
-  }
-  
-  /* Private methods */
-  // --------------------------------------------------------------------------
   /**
    * @brief Get all word representations for such digital number within automaton
    */
